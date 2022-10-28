@@ -8,6 +8,7 @@ const Course = sequelize.define("course", {
     autoIncrement: true,
     allowNull: false,
   },
+  name: { type: DataTypes.STRING, defaultValue: null },
   description: { type: DataTypes.STRING, defaultValue: null },
   video: { type: DataTypes.STRING, defaultValue: null },
   img: { type: DataTypes.STRING, defaultValue: null },

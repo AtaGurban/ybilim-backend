@@ -2,6 +2,9 @@ const ApiError = require("../error/ApiError");
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
 ffmpeg.setFfmpegPath(ffmpegPath);
+const uuid = require("uuid");
+const path = require("path");
+const fs = require("fs");
 
 
 const {
@@ -41,7 +44,22 @@ class StreamControllers {
         videoStream.pipe(res);
     }
 
+    async add(req, res, next) {
+        // const { name, description } = req.body;
+        const {img, video} = req.files
+        const fileNameImg = uuid.v4() + ".jpg";
+        const fileNameVideo = uuid.v4();
+        img.mv(path.resolve(__dirname, "..", "files", "images", fileNameImg))
+        video.mv(path.resolve(__dirname, "..", "files", "videos", (fileNameVideo + '720.mp4')))
+        const pathConvertVideo = path.resolve(__dirname, "..", "files", "videos", fileNameVideo)
+        ffmpeg(pathConvertVideo).size('854x480').save(path.resolve(__dirname, "..", "files", "videos", (fileNameVideo + '480.mp4')))
+        ffmpeg(pathConvertVideo).size('640x360').save(path.resolve(__dirname, "..", "files", "videos", (fileNameVideo + '360.mp4')))
+        // console.log(path.resolve(__dirname, "..", "files", "videos", 'fileNameVideo'));
+    }
+
+
+
 }
 
 
-module.exports = new StreamControllers();
+module.exports = new StreamControllers(); 

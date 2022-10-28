@@ -5,6 +5,7 @@ const router = new Router()
 
 
 router.get('/', StreamControllers.stream)
+router.post('/add-video', StreamControllers.add)
 
 
 
