@@ -16,7 +16,6 @@ const { where } = require("sequelize");
 class StreamControllers {
     async stream(req, res, next) {
         const { id, q } = req.query
-        console.log(id, q);
         const course = await Course.findOne({where:{id:id}})
         const videoName = `${q}${course.video}`
         // Ensure there is a range given for the video
@@ -25,10 +24,8 @@ class StreamControllers {
             res.status(400).send("Requires Range header");
         }
         const videoPath = (path.resolve(__dirname, "..", "files", "ConvertedVideo", videoName))
-        console.log(videoPath); 
         const videoSize = fs.statSync(videoPath).size;
         const CHUNK_SIZE = (10 ** 6) / 2; // 1MB
-        console.log(range);
         const start = Number(range.replace(/\D/g, "")); 
         const end = Math.min(start + CHUNK_SIZE, videoSize - 1);
 
@@ -48,26 +45,28 @@ class StreamControllers {
 
         // Stream the video chunk to the client
         videoStream.pipe(res);
-        // res.json(fs.statSync('eaf4def1-61dc-4d54-8f0d-b3d50ca7afc1.m3u8'))
-        // ffmpeg(pathConvertVideo).res
     }
 
     async add(req, res, next) { 
         try {
             const { name, description } = req.body;
             const {img, video} = req.files 
-            const fileNameImg = uuid.v4() + ".jpg"; 
+            const fileNameImg = uuid.v4() + ".jpg";  
             const fileNameVideo = uuid.v4() + '.mp4';    
             img.mv(path.resolve(__dirname, "..", "files", "images", fileNameImg))
             video.mv(path.resolve(__dirname, "..", "files", "videos", (fileNameVideo)))
             const pathConvertVideo = path.resolve(__dirname, "..", "files", "videos", fileNameVideo)
-            ffmpeg(pathConvertVideo)
+            await ffmpeg(pathConvertVideo)
             .size('1280x720').audioBitrate(96).videoBitrate(800).save(path.resolve(__dirname, "..", "files", "ConvertedVideo", ('720' + fileNameVideo)))
+            await ffmpeg(pathConvertVideo)
             .size('854x480').audioBitrate(96).videoBitrate(500).save(path.resolve(__dirname, "..", "files", "ConvertedVideo", ('480' + fileNameVideo)))
-            .size('640x360').audioBitrate(96).videoBitrate(300).save(path.resolve(__dirname, "..", "files", "ConvertedVideo", ('360' + fileNameVideo)))
+            await ffmpeg(pathConvertVideo)
+            .size('640x360').audioBitrate(96).videoBitrate(500).save(path.resolve(__dirname, "..", "files", "ConvertedVideo", ('360' + fileNameVideo)))
+            // .size('854x480').audioBitrate(96).videoBitrate(500).save(path.resolve(__dirname, "..", "files", "ConvertedVideo", ('480' + fileNameVideo)))
+            // .size('640x360').audioBitrate(96).videoBitrate(300).save(path.resolve(__dirname, "..", "files", "ConvertedVideo", ('360' + fileNameVideo)))
             const result = await Course.create({
-                name,
-                description,
+                name, 
+                description,  
                 video:fileNameVideo,
                 img:fileNameImg,
             })
@@ -80,8 +79,14 @@ class StreamControllers {
     }
 
     async list(req, res, next){
-        const list = await Course.findAll()
-        return res.json(list)
+        const {id} = req.query
+        if (id){
+            const course = await Course.findOne({where:{id:id}})
+            return res.json(course)
+        }else {
+            const list = await Course.findAll()
+            return res.json(list)
+        }
     }
 
     async remove(req, res, next){
