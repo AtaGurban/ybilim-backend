@@ -20,12 +20,12 @@ app.use(ErrorHandlingMiddleware);
 
 const start = async () => {
   const httpServer = http.createServer(app);
-  // const httpsServer = https.createServer(credentials, app);
+  // const httpsServer = https.createServer(credentials, app); 
   try {
     await sequelize.authenticate();
     await sequelize.sync();
     httpServer.listen(PORT, () => console.log(`server started on port ${PORT}`));
-    // httpsServer.listen(443, () => console.log(`server started on port 443`));
+    // httpsServer.listen(443, () => console.log(`server started on port 443`)); 
     // app.listen(PORT, ()=> console.log(`server started on port ${PORT}`))
   } catch (error) {
     console.log(error);

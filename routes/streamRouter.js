@@ -5,7 +5,9 @@ const router = new Router()
 
 
 router.get('/', StreamControllers.stream)
-router.post('/add-video', StreamControllers.add)
+router.post('/upload', StreamControllers.add) 
+router.get('/list', StreamControllers.list) 
+router.delete('/remove', StreamControllers.remove) 
 
 
 

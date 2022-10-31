@@ -5,7 +5,7 @@ const streamRouter = require('./streamRouter')
 
 
    
-router.use('/video', streamRouter)
+router.use('/video', streamRouter) 
 
 
 
