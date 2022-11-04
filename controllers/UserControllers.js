@@ -25,8 +25,8 @@ class UserController {
         return res.json({token})
     }
     async login(req, res, next){
-        const {email, password} = req.body;
-        const user = await User.findOne({where:{email}})
+        const {phone, password} = req.body;
+        const user = await User.findOne({where:{phone}})
         if (!user){
             return next(ApiError.internal('Munun yaly ulanyjy yok'))
         }
