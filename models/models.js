@@ -10,6 +10,7 @@ const Course = sequelize.define("course", {
   },
   name: { type: DataTypes.STRING, defaultValue: null },
   description: { type: DataTypes.STRING, defaultValue: null },
+  teacher: { type: DataTypes.STRING, defaultValue: false },
   img: { type: DataTypes.STRING, defaultValue: null },
   favourite: { type: DataTypes.BOOLEAN, defaultValue: true },
 });
@@ -21,9 +22,10 @@ const Video = sequelize.define("video", {
     autoIncrement: true,
     allowNull: false,
   },
+  number: { type: DataTypes.INTEGER, allowNull: false },
   name: { type: DataTypes.STRING, defaultValue: null },
   video: { type: DataTypes.STRING, defaultValue: null },
-  description: { type: DataTypes.STRING, defaultValue: null },
+  description: { type: DataTypes.TEXT, defaultValue: null },
   img: { type: DataTypes.STRING, defaultValue: null },
 
 });
@@ -38,7 +40,8 @@ const User = sequelize.define(
     password: { type: DataTypes.STRING, allowNull: false },
     first_name: { type: DataTypes.STRING, defaultValue: null },
     last_name: { type: DataTypes.STRING, defaultValue: null },
-    description: { type: DataTypes.STRING, defaultValue: null }, 
+    description: { type: DataTypes.STRING, defaultValue: null },
+    thisTeacher: { type: DataTypes.BOOLEAN, defaultValue: false },
     role: {type: DataTypes.STRING, defaultValue: 'USER'}
   }
 );

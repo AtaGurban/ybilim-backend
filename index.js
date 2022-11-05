@@ -1,6 +1,6 @@
 require("dotenv").config();
 const fs = require("fs");
-const http = require("http");
+const http = require("http"); 
 const express = require("express");
 const sequelize = require("./db");
 const models = require("./models/models");
@@ -11,6 +11,7 @@ const router = require("./routes/index");
 const ErrorHandlingMiddleware = require("./middleware/ErrorHandlingMiddleware");
 const path = require("path");
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 app.use("/api/static", express.static(path.resolve(__dirname, "files", "images")));

@@ -16,7 +16,8 @@ class UserController {
             return next(ApiError.badRequest('Maglumatlarynyz nadogry'))
         }
         const candidate = await User.findOne({where:{email}})
-        if (candidate){ 
+        const candidateTwo = await User.findOne({where:{phone}})
+        if (candidate || candidateTwo){ 
             return next(ApiError.badRequest('Bu email on hasaba alyndy'))
         }
         const hashPassword = await bcrypt.hash(password, 5)
@@ -27,7 +28,7 @@ class UserController {
     async login(req, res, next){
         const {phone, password} = req.body;
         const user = await User.findOne({where:{phone}})
-        if (!user){
+        if (!user){ 
             return next(ApiError.internal('Munun yaly ulanyjy yok'))
         }
         let comparePassword = bcrypt.compareSync(password, user.password)
