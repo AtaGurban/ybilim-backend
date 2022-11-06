@@ -1,10 +1,11 @@
-const { Course, Video, User } = require("../models/models");
+const { Course, Video, User, Transaction } = require("../models/models");
 const fs = require("fs");
 const ApiError = require("../error/ApiError");
 const uuid = require("uuid");
 const path = require("path");
 const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
 const ffmpeg = require('fluent-ffmpeg');
+
 ffmpeg.setFfmpegPath(ffmpegPath);
 
 class AdminController {
@@ -23,7 +24,7 @@ class AdminController {
 
       imgFile.mv(path.resolve(__dirname, "..", "files", "images", img));
 
-      const course = await Course.create({ name, img, description, favourite, userId:teacherdata.id, teacher:false });
+      const course = await Course.create({ name, img, description, favourite, teacher:teacherdata.id, teacher:false });
 
       return res.json(course);
     } catch (error) {
@@ -73,12 +74,25 @@ class AdminController {
   }
   async getAllUsers(req, res) {
     const page = req.query.page || 1;
-    console.log(page);
-    const limit = 2;
+    const limit = 10;
     const offset = (page - 1) * limit
     const users = await User.findAndCountAll({offset, limit});
-    // users.rows = users.rows.slice((page - 1 ) * limit, page * limit)
+    // users.rows = users.rows.slice((page - 1 ) * limit, page * limit) 
     return res.json(users);
+  }
+
+  async buyCourse(req, res) {
+    const {number, userId} = req.body
+    const course = await Course.findOne({where:{id:number}})
+    const user = await User.findOne({where:{id:userId}})
+    if (!user || !course){
+      return next(ApiError.badRequest("Girizilen maglumatlar yalnys"));
+    }
+    const transaction = await Transaction.create({
+      userId,
+      courseId:number
+    })
+    return res.json(transaction);
   }
 
   // async update(req, res) {
@@ -150,6 +164,10 @@ class AdminController {
       }
     );
     course.destroy();
+    const transactionsItems = await Transaction.findAll({where:{courseId:null}})
+    transactionsItems.map(async (i)=>{
+      await Transaction.destroy({where:{id: i.id}})
+    })
     return res.json(course);
   }
   async deleteVideo(req, res) {

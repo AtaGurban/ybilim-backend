@@ -1,6 +1,6 @@
 const ApiError = require("../error/ApiError")
 const bcrypt = require('bcrypt')
-const {User} = require('../models/models')
+const {User, Transaction, Course} = require('../models/models')
 const jwt = require('jsonwebtoken')
 
 const generateJwt = (id, email, name, role, phone)=>{
@@ -41,6 +41,14 @@ class UserController {
     async check(req, res, next){
         const token = generateJwt(req.user.id, req.user.email, req.user.name, req.user.role)
         return res.json({token}) 
+    }
+    async myCourse(req, res, next){
+        const {userId} = req.query
+        console.log('dsadsad');
+        const courses = await Transaction.findAll({where:{userId}, include:{model:Course, as:'course'}})
+        console.log(userId);
+        console.log(courses);
+        return res.json(courses) 
     }
 }
 

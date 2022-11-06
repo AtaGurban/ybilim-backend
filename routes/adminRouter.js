@@ -7,6 +7,7 @@ const authMiddleware = require('../middleware/authMiddleware')
 
 router.post('/create-course',authMiddleware, AdminControllers.createCourse)
 router.post('/create-video',authMiddleware, AdminControllers.createVideo)
+router.post('/buy-course',authMiddleware, AdminControllers.buyCourse)
 router.get('/getvideo', AdminControllers.getAllVideo)
 router.get('/get-all-course', AdminControllers.getAll)
 router.get('/get-users', AdminControllers.getAllUsers)
