@@ -46,7 +46,7 @@ class AdminController {
         await ffmpeg(pathConvertVideo)
         .size('854x480').audioBitrate(96).videoBitrate(500).save(path.resolve(__dirname, "..", "files", "convertedVideo", ('480' + fileNameVideo)))
         await ffmpeg(pathConvertVideo)
-        .size('640x360').audioBitrate(96).videoBitrate(500).save(path.resolve(__dirname, "..", "files", "convertedVideo", ('360' + fileNameVideo)))
+        .size('640x360').audioBitrate(96).videoBitrate(300).save(path.resolve(__dirname, "..", "files", "convertedVideo", ('360' + fileNameVideo)))
         // .size('854x480').audioBitrate(96).videoBitrate(500).save(path.resolve(__dirname, "..", "files", "ConvertedVideo", ('480' + fileNameVideo)))
         // .size('640x360').audioBitrate(96).videoBitrate(300).save(path.resolve(__dirname, "..", "files", "ConvertedVideo", ('360' + fileNameVideo)))
         const result = await Video.create({

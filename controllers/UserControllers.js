@@ -2,6 +2,8 @@ const ApiError = require("../error/ApiError")
 const bcrypt = require('bcrypt')
 const {User, Transaction, Course} = require('../models/models')
 const jwt = require('jsonwebtoken')
+const uuid = require('uuid')
+const path = require("path");
 
 const generateJwt = (id, email, name, role, phone)=>{
  return jwt.sign({id, email:email, name:name, phone:phone, role:role}, process.env.SECRET_KEY, {expiresIn: '24h'})
@@ -44,11 +46,30 @@ class UserController {
     }
     async myCourse(req, res, next){
         const {userId} = req.query
-        console.log('dsadsad');
         const courses = await Transaction.findAll({where:{userId}, include:{model:Course, as:'course'}})
-        console.log(userId);
-        console.log(courses);
         return res.json(courses) 
+    }
+    async getOneUser(req, res, next){
+        const {id} = req.query
+        const user = await User.findOne({where:{id}})
+        return res.json(user) 
+    }
+    async update(req, res, next){
+        const {userId, isTeacher, description, password} = req.body
+        const {img} = req.files
+        let update = {thisTeacher: isTeacher, description}
+        if (password){
+            const hashPassword = await bcrypt.hash(password, 5)
+            update.password = hashPassword
+        }
+        if (img){
+            const fileNameImg = uuid.v4() + ".jpg";  
+            img.mv(path.resolve(__dirname, "..", "files", "images", fileNameImg))
+            update.avatar = fileNameImg
+        }
+        const user = await User.update(update, {where:{id:userId}})
+
+        return res.json(user) 
     }
 }
 
