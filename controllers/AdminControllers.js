@@ -13,27 +13,28 @@ class AdminController {
     try {
       const { name, description, favourite, teacher } = req.body;
       if (!name || !description || !favourite || !teacher){
-        return next(ApiError.badRequest("Maglumatlar doly dal"));
+        return next(ApiError.internal("Maglumatlar doly dal"));
       }
       const teacherdata = await User.findOne({where:{phone:teacher}})
       if (!teacherdata){
-        return next(ApiError.badRequest("Munun yaly mugallym yok"));
+        return next(ApiError.internal("Munun yaly mugallym yok"));
       }
+      
       const { imgFile } = req.files;
       let img = uuid.v4() + ".jpg";
 
       imgFile.mv(path.resolve(__dirname, "..", "files", "images", img));
 
-      const course = await Course.create({ name, img, description, favourite, teacher:teacherdata.id, teacher:false });
+      const course = await Course.create({ name, img, description, favourite, user:teacherdata.id });
 
       return res.json(course);
     } catch (error) {
-      next(ApiError.badRequest(error.message));
+      next(ApiError.internal(error.message));
     }
   }
   async createVideo(req, res, next) {
     try {
-        const { name, description, number, courseId } = req.body;
+        const { name,  number, courseId } = req.body;
         const {img, video} = req.files 
         const fileNameImg = uuid.v4() + ".jpg";  
         const fileNameVideo = (uuid.v4() + '.mp4');    
@@ -44,16 +45,15 @@ class AdminController {
         // await ffmpeg(pathConvertVideo)
         // .size('1280x720').audioBitrate(96).videoBitrate(800).save(path.resolve(__dirname, "..", "files", "convertedVideo", ('720' + fileNameVideo)))
         await ffmpeg(pathConvertVideo)
-        .size('854x480').audioBitrate(96).videoBitrate(500).save(path.resolve(__dirname, "..", "files", "convertedVideo", ('480' + fileNameVideo)))
+        .size('854x480').audioBitrate(96).videoBitrate(400).save(path.resolve(__dirname, "..", "files", "convertedVideo", ('480' + fileNameVideo)))
         await ffmpeg(pathConvertVideo)
-        .size('640x360').audioBitrate(96).videoBitrate(300).save(path.resolve(__dirname, "..", "files", "convertedVideo", ('360' + fileNameVideo)))
+        .size('640x360').audioBitrate(96).videoBitrate(250).save(path.resolve(__dirname, "..", "files", "convertedVideo", ('360' + fileNameVideo)))
         // .size('854x480').audioBitrate(96).videoBitrate(500).save(path.resolve(__dirname, "..", "files", "ConvertedVideo", ('480' + fileNameVideo)))
         // .size('640x360').audioBitrate(96).videoBitrate(300).save(path.resolve(__dirname, "..", "files", "ConvertedVideo", ('360' + fileNameVideo)))
         const result = await Video.create({
             name,
             courseId,
-            number,
-            description,   
+            number,   
             video:fileNameVideo,
             img:fileNameImg,
         })
@@ -65,6 +65,11 @@ class AdminController {
 
   async getAll(req, res) {
     const list = await Course.findAll();
+    return res.json(list);
+  }
+
+  async getFavouriteCourse(req, res) {
+    const list = await Course.findAll({where:{favourite:true}});
     return res.json(list);
   }
   async getAllVideo(req, res) {
@@ -86,7 +91,7 @@ class AdminController {
     const course = await Course.findOne({where:{id:number}})
     const user = await User.findOne({where:{id:userId}})
     if (!user || !course){
-      return next(ApiError.badRequest("Girizilen maglumatlar yalnys"));
+      return next(ApiError.internal("Girizilen maglumatlar yalnys"));
     }
     const transaction = await Transaction.create({
       userId,

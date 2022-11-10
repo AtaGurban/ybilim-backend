@@ -6,7 +6,7 @@ const uuid = require("uuid");
 const path = require("path");
 const fs = require("fs");
 
-const { Course, Video } = require("../models/models");
+const { Course, Video, User } = require("../models/models");
 const { where } = require("sequelize");
 
 class StreamControllers {
@@ -36,8 +36,8 @@ class StreamControllers {
         const contentLength = end - start + 1;
         const headers = {
           "Content-Range": `bytes ${start}-${end}/${videoSize}`,
-          "Accept-Ranges": "bytes",
-          "Content-Length": contentLength,
+          "Accept-Ranges": "bytes", 
+          "Content-Length": contentLength, 
           "Content-Type": "video/mp4",
         };
         res.writeHead(206, headers);
@@ -94,7 +94,8 @@ class StreamControllers {
     if (videoId){
         const video = await Video.findOne({where:{id:videoId}, include:{model: Course, as: 'course'}})
         const nextVideoId = (await Video.findOne({where:{courseId:video.course.id, number: video.number + 1}}))?.id
-        return res.json({video, nextVideoId});
+        const teacher = await User.findOne({where:{id:video.course.userId}})
+        return res.json({video, nextVideoId, teacher});
     }
   }
 

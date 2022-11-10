@@ -10,7 +10,7 @@ const Course = sequelize.define("course", {
   },
   name: { type: DataTypes.STRING, defaultValue: null },
   description: { type: DataTypes.STRING, defaultValue: null },
-  teacher: { type: DataTypes.STRING, defaultValue: false },
+  // teacher: { type: DataTypes.STRING, defaultValue: false },
   img: { type: DataTypes.STRING, defaultValue: null },
   favourite: { type: DataTypes.BOOLEAN, defaultValue: true },
 });
@@ -25,7 +25,7 @@ const Video = sequelize.define("video", {
   number: { type: DataTypes.INTEGER, allowNull: false },
   name: { type: DataTypes.STRING, defaultValue: null },
   video: { type: DataTypes.STRING, defaultValue: null },
-  description: { type: DataTypes.TEXT, defaultValue: null },
+  // description: { type: DataTypes.TEXT, defaultValue: null }, 
   img: { type: DataTypes.STRING, defaultValue: null },
 
 });
@@ -58,6 +58,9 @@ Course.hasMany(Transaction, )
 Transaction.belongsTo(Course, {as: 'course'}) 
 User.hasMany(Transaction, ) 
 Transaction.belongsTo(User, {as: 'user'}) 
+
+User.hasMany(Course, {as: 'teacher'})
+// User.belongsTo(Course, {as: 'course'})
   
 // Course.belongsTo(Transaction, {as:'course'})
 

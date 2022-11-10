@@ -54,6 +54,12 @@ class UserController {
         const user = await User.findOne({where:{id}})
         return res.json(user) 
     }
+    async remove(req, res, next){
+        const {id} = req.query
+        const user = await User.findOne({where:{id}})
+        user.destroy()
+        return res.json(user) 
+    }
     async update(req, res, next){
         const {userId, isTeacher, description, password} = req.body
         const {img} = req.files
