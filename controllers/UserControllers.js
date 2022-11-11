@@ -61,8 +61,8 @@ class UserController {
         return res.json(user) 
     }
     async update(req, res, next){
-        const {userId, isTeacher, description, password} = req.body
-        const {img} = req.files
+        const {userId, isTeacher, description, password, role} = req.body
+        const img = req?.files?.img
         let update = {thisTeacher: isTeacher, description}
         if (password){
             const hashPassword = await bcrypt.hash(password, 5)
@@ -72,6 +72,11 @@ class UserController {
             const fileNameImg = uuid.v4() + ".jpg";  
             img.mv(path.resolve(__dirname, "..", "files", "images", fileNameImg))
             update.avatar = fileNameImg
+        }
+        if (role === 'true'){
+            update.role = 'ADMIN'
+        } else {
+            update.role = 'USER'
         }
         const user = await User.update(update, {where:{id:userId}})
 
