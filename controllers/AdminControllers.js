@@ -62,8 +62,6 @@ class AdminController {
         "convertedVideo",
         fileNameVideoPath
       );
-      // await ffmpeg(pathConvertVideo)
-      // .size('1280x720').audioBitrate(96).videoBitrate(800).save(path.resolve(__dirname, "..", "files", "convertedVideo", ('720' + fileNameVideo)))
       await ffmpeg(pathConvertVideo)
         .size("854x480")
         .audioBitrate(96)
@@ -160,6 +158,7 @@ class AdminController {
         }
       );
       const fileNameImg = uuid.v4() + ".jpg";
+      img.mv(path.resolve(__dirname, "..", "files", "images", fileNameImg));
       update.img = fileNameImg
     }
     await Course.update(update, {where:{id}})
@@ -167,26 +166,33 @@ class AdminController {
     return res.json(true);
   }
 
-  // async update(req, res) {
-  //   const brand = req.body;
-  //   let id = brand.id;
-  //   let img = req.files;
+  async updateVideo(req, res) {
+    const { videoName, number, id } = req.body;
+    const img = req?.files?.img;
+    const video = await Video.findOne({ where: { id } });
+    let update = {
+      name: videoName,
+      number,
+    };
 
-  //   if (img.img) {
-  //     img = img.img;
-  //     let imgName = uuid.v4() + ".jpg";
-  //     img.mv(path.resolve(__dirname, "..", "files", "images", imgName));
-  //     brand.img = imgName;
-  //   }
+    if (img) {
+      fs.unlink(
+        path.resolve(__dirname, "..", "files", "images", video.img),
+        function (err) {
+          if (err) {
+            console.log(err);
+          }
+        }
+      );
+      const fileNameImg = uuid.v4() + ".jpg";
+      img.mv(path.resolve(__dirname, "..", "files", "images", fileNameImg));
+      update.img = fileNameImg
+    }
+    await Video.update(update, {where:{id}})
 
-  //   if (!brand.id) {
-  //     res.status(400).json({ message: "ID yok" });
-  //   }
+    return res.json(true);
+  }
 
-  //   const updatedPost = await Brand.update(brand, { where: { id } });
-
-  //   return res.json(updatedPost);
-  // }
 
   async deleteCourse(req, res) {
     const { id } = req.query;
