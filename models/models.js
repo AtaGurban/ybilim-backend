@@ -8,7 +8,7 @@ const Course = sequelize.define("course", {
     autoIncrement: true,
     allowNull: false,
   },
-  name: { type: DataTypes.STRING, defaultValue: null },
+  name: { type: DataTypes.STRING, defaultValue: null, unique:true },
   description: { type: DataTypes.STRING, defaultValue: null },
   // teacher: { type: DataTypes.STRING, defaultValue: false },
   img: { type: DataTypes.STRING, defaultValue: null },
@@ -25,7 +25,6 @@ const Video = sequelize.define("video", {
   number: { type: DataTypes.INTEGER, allowNull: false },
   name: { type: DataTypes.STRING, defaultValue: null },
   video: { type: DataTypes.STRING, defaultValue: null },
-  // description: { type: DataTypes.TEXT, defaultValue: null }, 
   img: { type: DataTypes.STRING, defaultValue: null },
 
 });
@@ -36,7 +35,7 @@ const User = sequelize.define(
     id: { type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true,},
     avatar: { type: DataTypes.STRING, defaultValue: null },
     email: { type: DataTypes.STRING, allowNull: false },
-    phone: { type: DataTypes.STRING, allowNull: false },
+    phone: { type: DataTypes.STRING, allowNull: false, unique:true },
     password: { type: DataTypes.STRING, allowNull: false },
     first_name: { type: DataTypes.STRING, defaultValue: null },
     last_name: { type: DataTypes.STRING, defaultValue: null },
@@ -53,6 +52,42 @@ const Transaction = sequelize.define(
   }
 );  
 
+const City = sequelize.define("city", {
+  id: {
+    type: DataTypes.BIGINT,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+  price: { type: DataTypes.STRING, allowNull: false },
+  name: { type: DataTypes.STRING, allowNull: false },
+  img: { type: DataTypes.STRING, defaultValue: null },
+});
+ 
+const Collage = sequelize.define("collage", {
+  id: {
+    type: DataTypes.BIGINT,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+  price: { type: DataTypes.STRING, allowNull: false },
+  name: { type: DataTypes.STRING, allowNull: false },
+  img: { type: DataTypes.STRING, defaultValue: null },
+});
+
+const Direction = sequelize.define("direction", {
+  id: {
+    type: DataTypes.BIGINT,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+  price: { type: DataTypes.STRING, allowNull: false },
+  name: { type: DataTypes.STRING, allowNull: false },
+  img: { type: DataTypes.STRING, defaultValue: null },
+});
+ 
   
 Course.hasMany(Transaction, )
 Transaction.belongsTo(Course, {as: 'course'}) 
@@ -60,23 +95,23 @@ User.hasMany(Transaction, )
 Transaction.belongsTo(User, {as: 'user'}) 
 
 User.hasMany(Course, {as: 'teacher'})
-// User.belongsTo(Course, {as: 'course'})
-  
-// Course.belongsTo(Transaction, {as:'course'})
-
-// Transaction.hasMany(Course, {as: 'course'})  
-// Course
-// Transaction.hasMany(User, {as: 'user'})  
 
 Course.hasMany(Video, { as: "video" });
 Video.belongsTo(Course, {as: 'course'});
 
-// User.hasMany(Course, { as: "course" });
-// Course.belongsTo(User, {as: 'user'});
+City.hasMany(Collage, { as: "collage" });
+Collage.belongsTo(City, {as: 'city'});
+
+Collage.hasMany(Direction, { as: "direction" });
+Direction.belongsTo(Collage, {as: 'collage'});
+
 
 module.exports = {
   Course,
   User,
   Video,
-  Transaction
+  Transaction,
+  Direction,
+  City,
+  Collage
 }

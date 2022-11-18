@@ -20,7 +20,7 @@ class UserController {
         const candidate = await User.findOne({where:{email}})
         const candidateTwo = await User.findOne({where:{phone}})
         if (candidate || candidateTwo){ 
-            return next(ApiError.badRequest('Bu email on hasaba alyndy'))
+            return next(ApiError.badRequest('Bu telefon on hasaba alyndy'))
         }
         const hashPassword = await bcrypt.hash(password, 5)
         const user = await User.create({email, first_name:name, role, phone, password: hashPassword})

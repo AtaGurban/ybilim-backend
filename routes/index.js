@@ -3,6 +3,7 @@ const router = new Router()
 const streamRouter = require('./streamRouter')
 const userRouter = require('./userRouter.js')
 const adminRouter = require('./adminRouter')
+const educationRouter = require('./educationRouter')
 
 
 
@@ -10,6 +11,7 @@ const adminRouter = require('./adminRouter')
 router.use('/video', streamRouter) 
 router.use('/user', userRouter) 
 router.use('/admin', adminRouter) 
+router.use('/education', educationRouter) 
 
 
 
