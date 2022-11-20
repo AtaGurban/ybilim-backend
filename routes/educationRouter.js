@@ -5,8 +5,13 @@ const router = new Router()
 
 
 router.get('/city', EducationControllers.getAllCity)
+router.get('/collage', EducationControllers.getAllCollage)
 router.post('/city', EducationControllers.createCity)
-router.delete('/city', EducationControllers.removeCity)
+router.post('/collage', EducationControllers.createCollage)
+router.put('/city', EducationControllers.updateCity)
+router.put('/collage', EducationControllers.updateCollage)
+router.delete('/city', EducationControllers.removeCity) 
+router.delete('/collage', EducationControllers.removeCollage)
 
 
 

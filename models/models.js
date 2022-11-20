@@ -87,10 +87,30 @@ const Direction = sequelize.define("direction", {
   name: { type: DataTypes.STRING, allowNull: false },
   img: { type: DataTypes.STRING, defaultValue: null },
 });
- 
+
+
+const Category = sequelize.define("category", {
+  id: {
+    type: DataTypes.BIGINT,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+});
+
+
+City.hasOne(Category)
+Category.belongsTo(City) 
+
+Collage.hasOne(Category)
+Category.belongsTo(Collage) 
+
+Direction.hasOne(Category)
+Category.belongsTo(Direction) 
   
 Course.hasMany(Transaction, )
 Transaction.belongsTo(Course, {as: 'course'}) 
+
 User.hasMany(Transaction, ) 
 Transaction.belongsTo(User, {as: 'user'}) 
 
@@ -113,5 +133,6 @@ module.exports = {
   Transaction,
   Direction,
   City,
-  Collage
+  Collage,
+  Category
 }

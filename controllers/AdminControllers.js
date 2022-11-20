@@ -5,6 +5,7 @@ const uuid = require("uuid");
 const path = require("path");
 const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
 const ffmpeg = require("fluent-ffmpeg");
+const { resolve } = require("path");
 
 ffmpeg.setFfmpegPath(ffmpegPath);
 
@@ -13,7 +14,7 @@ class AdminController {
     try {
       const { name, description, favourite, teacher } = req.body;
       const { imgFile } = req.files;
-      if (!name || !description || !favourite || !teacher || imgFile) {
+      if (!name || !description || !favourite || !teacher || !imgFile) {
         return next(ApiError.internal("Maglumatlar doly dal"));
       }
       const teacherdata = await User.findOne({ where: { phone: teacher, thisTeacher:true } });
@@ -70,7 +71,12 @@ class AdminController {
         "files",
         "convertedVideo",
         fileNameVideoPath
-      );
+        );
+      // function convertVideo(){
+      //   return new Promise ((resolve, reject)=>{
+          
+      //   })
+      // }
       await ffmpeg(pathConvertVideo)
         .size("854x480")
         .audioBitrate(96)
@@ -88,6 +94,7 @@ class AdminController {
         .size("640x360")
         .audioBitrate(96)
         .videoBitrate(250)
+
         .save(
           path.resolve(
             __dirname,

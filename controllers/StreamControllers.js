@@ -14,6 +14,7 @@ class StreamControllers {
         const { id, q } = req.query;
         const video = await Video.findOne({ where: { id: id } });
         const videoName = `${q}${video.video}`;
+        console.log(videoName);
         // Ensure there is a range given for the video
         const range = req.headers.range;
         if (!range) {

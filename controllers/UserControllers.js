@@ -61,7 +61,7 @@ class UserController {
         return res.json(user) 
     }
     async update(req, res, next){
-        const {userId, isTeacher, description, password, role} = req.body
+        const {userId, isTeacher, description, password, role, superAdmin} = req.body
         const img = req?.files?.img
         let update = {thisTeacher: isTeacher, description}
         if (password){
@@ -75,12 +75,14 @@ class UserController {
         }
         if (role === 'true'){
             update.role = 'ADMIN'
+        } else if (superAdmin === 'true'){
+            update.role = 'SUPERADMIN'
         } else {
             update.role = 'USER'
         }
         const user = await User.update(update, {where:{id:userId}})
 
-        return res.json(user) 
+        return res.json(user)  
     }
 }
 
