@@ -52,12 +52,15 @@ class EducationControllers {
   }
   async updateCity(req, res, next) {
     const {name, price, id} = req.body
-    const {imgFile} = req.files
+    const imgFile = req.files?.imgFile
     const city = await City.findOne({where:{id}})
-    await removeImg(city.img)
-    let img = uuid.v4() + ".jpg";
-    imgFile.mv(path.resolve(__dirname, "..", "files", "images", img));
-    let update = {img, price, name}
+    let update = {price, name}
+    if (imgFile){
+      await removeImg(city.img)
+      let img = uuid.v4() + ".jpg";
+      imgFile.mv(path.resolve(__dirname, "..", "files", "images", img));
+      update.img = img
+    }
     await City.update(update, {where:{id}})
     return res.json(city)
   }
@@ -92,14 +95,55 @@ class EducationControllers {
   }
   async updateCollage(req, res, next) {
     const {name, price, id, cityId} = req.body
-    const {imgFile} = req.files
+    const imgFile = req.files?.imgFile
     const collage = await Collage.findOne({where:{id}})
-    await removeImg(collage.img)
-    let img = uuid.v4() + ".jpg";
-    imgFile.mv(path.resolve(__dirname, "..", "files", "images", img));
-    let update = {img, price, name, cityId}
+    let update = {price, name, cityId}
+    if (imgFile){
+      await removeImg(collage.img)
+      let img = uuid.v4() + ".jpg";
+      imgFile.mv(path.resolve(__dirname, "..", "files", "images", img));
+      update.img = img
+    }
     await Collage.update(update, {where:{id}})
     return res.json(collage)
+  }
+  async getAllDirection(req, res, next) {
+    const collageId = req.query.id
+    const directions = await Direction.findAll({where:{collageId}})
+    return res.json(directions)
+  }
+  async removeDirection(req, res, next) {
+    const {id} = req.query
+    const direction = await Direction.findOne({where:{id}})
+    await removeImg(direction.img)
+    await direction.destroy()
+    return res.json(direction)
+  }
+  async createDirection(req, res, next) {
+    const {name, price, collageId} = req.body
+    const {imgFile} = req.files
+    let img = uuid.v4() + ".jpg";
+    imgFile.mv(path.resolve(__dirname, "..", "files", "images", img));
+    const direction = await Direction.create({
+        img, price, name, collageId:(+collageId)
+    })
+    const directionId = direction.id
+    const catId = await Category.create({directionId})
+    return res.json(direction)
+  }
+  async updateDirection(req, res, next) {
+    const {name, price, id, collageId} = req.body
+    const imgFile = req.files?.imgFile
+    const direction = await Direction.findOne({where:{id}})
+    let update = {price, name, collageId}
+    if (imgFile){
+      await removeImg(direction.img)
+      let img = uuid.v4() + ".jpg";
+      imgFile.mv(path.resolve(__dirname, "..", "files", "images", img));
+      update.img = img
+    }
+    await Direction.update(update, {where:{id}})
+    return res.json(direction) 
   }
 
 }
