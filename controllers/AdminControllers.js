@@ -61,7 +61,7 @@ class AdminController {
           __dirname,
           "..",
           "files",
-          "convertedVideo",
+          "ConvertedVideo",
           fileNameVideoPath
         )
       );
@@ -69,7 +69,7 @@ class AdminController {
         __dirname,
         "..",
         "files",
-        "convertedVideo",
+        "ConvertedVideo",
         fileNameVideoPath
         );
       // function convertVideo(){
@@ -86,7 +86,7 @@ class AdminController {
             __dirname,
             "..",
             "files",
-            "convertedVideo",
+            "ConvertedVideo",
             "480" + fileNameVideo
           )
         );
@@ -100,7 +100,7 @@ class AdminController {
             __dirname,
             "..",
             "files",
-            "convertedVideo",
+            "ConvertedVideo",
             "360" + fileNameVideo
           )
         );
@@ -230,7 +230,7 @@ class AdminController {
           __dirname,
           "..",
           "files",
-          "convertedVideo",
+          "ConvertedVideo",
           `720${i.video}`
         ),
         function (err) {
@@ -244,7 +244,7 @@ class AdminController {
           __dirname,
           "..",
           "files",
-          "convertedVideo",
+          "ConvertedVideo",
           `480${i.video}`
         ),
         function (err) {
@@ -258,7 +258,7 @@ class AdminController {
           __dirname,
           "..",
           "files",
-          "convertedVideo",
+          "ConvertedVideo",
           `360${i.video}`
         ),
         function (err) {
@@ -303,7 +303,7 @@ class AdminController {
         __dirname,
         "..",
         "files",
-        "convertedVideo",
+        "ConvertedVideo",
         `720${course.video}`
       ),
       function (err) {
@@ -317,7 +317,7 @@ class AdminController {
         __dirname,
         "..",
         "files",
-        "convertedVideo",
+        "ConvertedVideo",
         `480${course.video}`
       ),
       function (err) {
@@ -331,7 +331,7 @@ class AdminController {
         __dirname,
         "..",
         "files",
-        "convertedVideo",
+        "ConvertedVideo",
         `360${course.video}`
       ),
       function (err) {
