@@ -49,6 +49,19 @@ class UserController {
         const courses = await Transaction.findAll({where:{userId}, include:{model:Course, as:'course'}})
         return res.json(courses) 
     }
+    async getAllTransaction(req, res, next){
+        const page = req.query.page || 1;
+        const limit = 10;
+        const offset = (page - 1) * limit;
+        const courses = await Transaction.findAndCountAll({include:[{model:Course, as:'course'}, {model:User, as:'user'}], offset, limit})
+        return res.json(courses) 
+    }
+    async deleteTransaction(req, res, next){
+        const {id} = req.query;
+        const transaction = await Transaction.findOne({where:{id}})
+        await transaction.destroy()
+        return res.json(transaction) 
+    }
     async getOneUser(req, res, next){
         const {id} = req.query
         const user = await User.findOne({where:{id}})
