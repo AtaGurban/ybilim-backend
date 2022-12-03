@@ -59,7 +59,7 @@ const City = sequelize.define("city", {
     autoIncrement: true,
     allowNull: false,
   },
-  price: { type: DataTypes.STRING, allowNull: false },
+  price: { type: DataTypes.INTEGER, allowNull: false },
   name: { type: DataTypes.STRING, allowNull: false },
   img: { type: DataTypes.STRING, defaultValue: null },
 });
@@ -71,14 +71,24 @@ const Collage = sequelize.define("collage", {
     autoIncrement: true,
     allowNull: false,
   },
-  price: { type: DataTypes.STRING, allowNull: false },
+  price: { type: DataTypes.INTEGER, allowNull: false },
   name: { type: DataTypes.STRING, allowNull: false },
   img: { type: DataTypes.STRING, defaultValue: null },
+});
+const Banner = sequelize.define("banner", {
+  id: {
+    type: DataTypes.BIGINT,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+  page: { type: DataTypes.STRING, allowNull: false },
+  img: { type: DataTypes.STRING, allowNull: false },
 });
 
 const Direction = sequelize.define("direction", {
   id: {
-    type: DataTypes.BIGINT,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
     allowNull: false,
@@ -128,6 +138,7 @@ Direction.belongsTo(Collage, {as: 'collage'});
 
 module.exports = {
   Course,
+  Banner,
   User,
   Video,
   Transaction,

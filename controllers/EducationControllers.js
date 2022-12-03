@@ -73,7 +73,7 @@ class EducationControllers {
     const {id} = req.query
     const collage = await Collage.findOne({where:{id}})
     await removeImg(collage.img)
-    await collage.destroy()
+    await collage.destroy() 
     const directions = await Direction.findAll({where:{collageId:null}})
     directions.map(async (i)=>{
         await removeImg(i.img)

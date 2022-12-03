@@ -16,6 +16,10 @@ router.get('/get-favourite-course', AdminControllers.getFavouriteCourse)
 router.get('/get-users', AdminControllers.getAllUsers)
 router.delete('/remove-course', AdminControllers.deleteCourse)
 router.delete('/remove-video', AdminControllers.deleteVideo)
+router.post('/banner', AdminControllers.createBanner)
+router.get('/banner', AdminControllers.getBanner)
+// router.put('/banner', AdminControllers.updateBanner)
+router.delete('/banner', AdminControllers.deleteBanner)
 
 
 

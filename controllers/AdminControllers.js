@@ -1,4 +1,4 @@
-const { Course, Video, User, Transaction } = require("../models/models");
+const { Course, Video, User, Transaction, Banner } = require("../models/models");
 const fs = require("fs");
 const ApiError = require("../error/ApiError");
 const uuid = require("uuid");
@@ -138,6 +138,59 @@ class AdminController {
     const users = await User.findAndCountAll({ offset, limit });
     // users.rows = users.rows.slice((page - 1 ) * limit, page * limit)
     return res.json(users);
+  }
+  async createBanner(req, res) {
+    const img = req?.files?.img;
+    if (img){
+      const bannerCheck = await Banner.findOne({where:{page:'main'}})
+      if (bannerCheck){
+        fs.unlink(
+          path.resolve(__dirname, "..", "files", "images", bannerCheck.img),
+          function (err) {
+            if (err) {
+              console.log(err);
+            }
+          }
+        );
+        bannerCheck.destroy()
+      }
+      const fileNameImg = uuid.v4() + ".gif";
+      img.mv(path.resolve(__dirname, "..", "files", "images", fileNameImg));
+      const banner = await Banner.create({
+        page: 'main',
+        img: fileNameImg
+      })
+      return res.json(banner);
+    }
+  }
+  async getBanner(req, res) {
+    const banners = await Banner.findAll()
+    // users.rows = users.rows.slice((page - 1 ) * limit, page * limit)
+    return res.json(banners);
+  }
+  // async updateBanner(req, res) {
+  //   const page = req.query.page || 1;
+  //   const limit = 10;
+  //   const offset = (page - 1) * limit;
+  //   const users = await User.findAndCountAll({ offset, limit });
+  //   // users.rows = users.rows.slice((page - 1 ) * limit, page * limit)
+  //   return res.json(users);
+  // }
+  async deleteBanner(req, res) {
+    const {id} = req.query;
+    const banner = await Banner.findOne({id})
+    if (banner){
+      fs.unlink(
+        path.resolve(__dirname, "..", "files", "images", banner.img),
+        function (err) {
+          if (err) {
+            console.log(err);
+          }
+        }
+      );
+      banner.destroy()
+    }
+    return res.json(banner);
   }
 
   async buyCourse(req, res, next) {
