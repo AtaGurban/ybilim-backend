@@ -28,6 +28,17 @@ const Video = sequelize.define("video", {
   img: { type: DataTypes.STRING, defaultValue: null },
 
 });
+const File = sequelize.define("file", {
+  id: {
+    type: DataTypes.BIGINT,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+  // number: { type: DataTypes.INTEGER, allowNull: false },
+  name: { type: DataTypes.STRING, defaultValue: null },
+  file: { type: DataTypes.STRING, defaultValue: null },
+});
 
 const User = sequelize.define(
   "user",
@@ -123,11 +134,14 @@ Transaction.belongsTo(Course, {as: 'course'})
 
 User.hasMany(Transaction, ) 
 Transaction.belongsTo(User, {as: 'user'}) 
-
+ 
 User.hasMany(Course, {as: 'teacher'})
 
 Course.hasMany(Video, { as: "video" });
 Video.belongsTo(Course, {as: 'course'});
+
+Video.hasMany(File, { as: "file" });
+// File.belongsTo(Video, {as: 'video'});
 
 City.hasMany(Collage, { as: "collage" });
 Collage.belongsTo(City, {as: 'city'});
@@ -145,5 +159,6 @@ module.exports = {
   Direction,
   City,
   Collage,
-  Category
+  Category,
+  File
 }
