@@ -62,7 +62,6 @@ class AdminController {
         where: { number, courseId },
       });
       const videoNameCheck = await Video.findOne({ where: { name, courseId } });
-      console.log(req.files);
       if (videoNumberCheck || videoNameCheck) {
         return next(ApiError.internal("Munun yaly wideo onem goyuldy"));
       }
@@ -134,7 +133,6 @@ class AdminController {
           file: fileName,
           videoId: result.id,
         });
-        console.log(fileName);
       }
       return res.json(result);
     } catch (error) {
@@ -150,7 +148,13 @@ class AdminController {
   async getFileByVideo(req, res) {
     const { id } = req.query;
     const files = await File.findAll({where:{videoId:id}});
-    return res.json(list);
+    return res.json(files);
+  }
+  async deleteFile(req, res) {
+    const { id } = req.query;
+    const file = await File.findOne({where:{id}});
+    file.destroy()
+    return res.json(file);
   }
 
   async getFavouriteCourse(req, res) {
@@ -159,7 +163,7 @@ class AdminController {
   }
   async getAllVideo(req, res) {
     const { id } = req.query;
-    const list = await Video.findAll({ where: { courseId: id } });
+    const list = await Video.findAll({ where: { courseId: id }, include:{model: File, as: 'file'} });
     return res.json(list);
   }
   async getAllUsers(req, res) {
@@ -271,7 +275,7 @@ class AdminController {
   }
 
   async updateVideo(req, res) {
-    const { videoName, number, id } = req.body;
+    const { videoName, number, id, countFiles } = req.body;
     const img = req?.files?.img;
     const video = await Video.findOne({ where: { id } });
     let update = {
@@ -292,9 +296,28 @@ class AdminController {
       img.mv(path.resolve(__dirname, "..", "files", "images", fileNameImg));
       update.img = fileNameImg;
     }
-    await Video.update(update, { where: { id } });
 
-    return res.json(true);
+    await Video.update(update, { where: { id } });
+    try {
+      for (let i = 0; i < countFiles; i++) {
+        const file = req.files[`file[${i}]`];
+        console.log(unescape(file.name));
+        const fileType = file.name.split(".")[1];
+        let fileName = uuid.v4() + `.${fileType}`;
+        file.mv(path.resolve(__dirname, "..", "files", "files", fileName));
+        await File.create({
+          name: JSON.stringify(file.name),
+          file: fileName,
+          videoId: id,
+        });
+      }
+      return res.json(true);
+    } catch (error) {
+      return res.json(error);
+    }
+
+
+
   }
 
   async deleteCourse(req, res) {
