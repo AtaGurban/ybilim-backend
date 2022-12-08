@@ -26,12 +26,15 @@ class StreamControllers {
 
       let start;
       let end;
+      const CHUNK_SIZE = 10 ** 6 / 10
       const range = req.headers.range;
+      console.log(range);
       if (range) {
         const bytesPrefix = "bytes=";
         if (range.startsWith(bytesPrefix)) {
           const bytesRange = range.substring(bytesPrefix.length);
           const parts = bytesRange.split("-");
+          // parts[1] = `${(+parts[0]) + CHUNK_SIZE}`;
           if (parts.length === 2) {
             const rangeStart = parts[0] && parts[0].trim();
             if (rangeStart && rangeStart.length > 0) {
@@ -50,6 +53,7 @@ class StreamControllers {
       fs.stat(videoPath, (err, stat) => {
         if (err) {
           console.error(`File stat error for ${videoPath}.`);
+          console.error(err);
           res.sendStatus(500);
           return;
         }
@@ -74,20 +78,26 @@ class StreamControllers {
           }
 
           res.statusCode = start !== undefined || end !== undefined ? 206 : 200;
+
           res.setHeader("content-length", retrievedLength);
+
           if (range !== undefined) {
             res.setHeader(
               "content-range",
               `bytes ${start || 0}-${end || contentLength - 1}/${contentLength}`
             );
+            console.log(start);
+            console.log(`bytes ${start || 0}-${end || contentLength - 1}/${contentLength}`);
             res.setHeader("accept-ranges", "bytes");
           }
+
           const fileStream = fs.createReadStream(videoPath, options);
           fileStream.on("error", (error) => {
             console.log(`Error reading file ${videoPath}.`);
             console.log(error);
             res.sendStatus(500);
           });
+
           fileStream.pipe(res);
         }
       });

@@ -15,7 +15,10 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/api/static", express.static(path.resolve(__dirname, "files", "images")));
-app.use(fileUpload({})); 
+app.use(fileUpload({
+  defCharset: 'utf8',
+  defParamCharset: 'utf8'
+}));
 app.use("/api", router); 
 app.use(ErrorHandlingMiddleware);
  
