@@ -19,6 +19,7 @@ const convertVideo = async (size, videoBitrate, fileNameVideo, id) => {
       .size(size)
       .audioBitrate(96)
       .videoBitrate(videoBitrate)
+      .renice(20)
       .save(
         path.resolve(
           __dirname,

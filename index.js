@@ -1,9 +1,7 @@
 require("dotenv").config();
-const fs = require("fs");
 const http = require("http"); 
 const express = require("express");
 const sequelize = require("./db");
-const models = require("./models/models");
 const PORT = process.env.PORT || 5000;
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
@@ -25,17 +23,13 @@ app.use(ErrorHandlingMiddleware);
  
 const start = async () => {
   const httpServer = http.createServer(app);
-  // const httpsServer = https.createServer(credentials, app); 
   try {
     await sequelize.authenticate();
     await sequelize.sync();
     httpServer.listen(PORT, () => console.log(`server started on port ${PORT}`));
-    // httpsServer.listen(443, () => console.log(`server started on port 443`)); 
-    // app.listen(PORT, ()=> console.log(`server started on port ${PORT}`))
-    setInterval(async()=>{
-      await checkConvertVideo()
-      console.log('fdfd');
-    }, 12 * 60 * 60 * 1000)
+    // await checkConvertVideo()
+    // setInterval(async()=>{
+    // }, 12 * 60 * 60 * 1000)
 
   } catch (error) {
     console.log(error);
@@ -44,33 +38,3 @@ const start = async () => {
 
 start();
 
-
-
-// app.get("/", function (req, res) {
-//   res.sendFile(__dirname + "/index.html");
-// });
-// let id = 0
-// app.get("/video", function (req, res) {
-
-
-
-//   // get video stats (about 61MB)
-
-
-//   // Parse Range
-//   // Example: "bytes=32324-"
-
-
-
-
-// console.log('start', start);
-// console.log('end', end);
-//   // HTTP Status 206 for Partial Content
-
-// });
-
-
-
-// app.listen(8000, function () {
-//   console.log("Listening on port 8000!");
-// });
