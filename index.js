@@ -10,6 +10,7 @@ const fileUpload = require("express-fileupload");
 const router = require("./routes/index");
 const ErrorHandlingMiddleware = require("./middleware/ErrorHandlingMiddleware");
 const path = require("path");
+const { checkConvertVideo } = require("./service/checkConvertVideo");
 const app = express();
 
 app.use(cors());
@@ -31,10 +32,15 @@ const start = async () => {
     httpServer.listen(PORT, () => console.log(`server started on port ${PORT}`));
     // httpsServer.listen(443, () => console.log(`server started on port 443`)); 
     // app.listen(PORT, ()=> console.log(`server started on port ${PORT}`))
+    setInterval(async()=>{
+      await checkConvertVideo()
+      console.log('fdfd');
+    }, 12 * 60 * 60 * 1000)
+
   } catch (error) {
     console.log(error);
   }
-}; 
+};  
 
 start();
 

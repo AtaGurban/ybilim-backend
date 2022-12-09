@@ -10,11 +10,11 @@ const fs = require("fs");
 const ApiError = require("../error/ApiError");
 const uuid = require("uuid");
 const path = require("path");
-const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
-const ffmpeg = require("fluent-ffmpeg");
-const { resolve } = require("path");
+// const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path;
+// const ffmpeg = require("fluent-ffmpeg");
+// const { resolve } = require("path");
 
-ffmpeg.setFfmpegPath(ffmpegPath);
+// ffmpeg.setFfmpegPath(ffmpegPath);
 
 class AdminController {
   async createCourse(req, res, next) {
@@ -76,45 +76,39 @@ class AdminController {
           fileNameVideoPath
         )
       );
-      const pathConvertVideo = path.resolve(
-        __dirname,
-        "..",
-        "files",
-        "ConvertedVideo",
-        fileNameVideoPath
-      );
-      // function convertVideo(){
-      //   return new Promise ((resolve, reject)=>{
-
-      //   })
-      // }
-      await ffmpeg(pathConvertVideo)
-        .size("854x480")
-        .audioBitrate(96)
-        .videoBitrate(400)
-        .save(
-          path.resolve(
-            __dirname,
-            "..",
-            "files",
-            "ConvertedVideo",
-            "480" + fileNameVideo
-          )
-        );
-      await ffmpeg(pathConvertVideo)
-        .size("640x360")
-        .audioBitrate(96)
-        .videoBitrate(250)
-
-        .save(
-          path.resolve(
-            __dirname,
-            "..",
-            "files",
-            "ConvertedVideo",
-            "360" + fileNameVideo
-          )
-        );
+      // const pathConvertVideo = path.resolve(
+      //   __dirname,
+      //   "..",
+      //   "files",
+      //   "ConvertedVideo",
+      //   fileNameVideoPath
+      // );
+      // await ffmpeg(pathConvertVideo)
+      //   .size("854x480")
+      //   .audioBitrate(96)
+      //   .videoBitrate(400)
+      //   .save(
+      //     path.resolve(
+      //       __dirname,
+      //       "..",
+      //       "files",
+      //       "ConvertedVideo",
+      //       "480" + fileNameVideo
+      //     )
+      //   );
+      // await ffmpeg(pathConvertVideo)
+      //   .size("640x360")
+      //   .audioBitrate(96)
+      //   .videoBitrate(250)
+      //   .save(
+      //     path.resolve(
+      //       __dirname,
+      //       "..",
+      //       "files",
+      //       "ConvertedVideo",
+      //       "360" + fileNameVideo
+      //     )
+      //   );
       const result = await Video.create({
         name,
         courseId,

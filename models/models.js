@@ -26,7 +26,24 @@ const Video = sequelize.define("video", {
   name: { type: DataTypes.STRING, defaultValue: null },
   video: { type: DataTypes.STRING, defaultValue: null },
   img: { type: DataTypes.STRING, defaultValue: null },
-
+});
+const VideoMediumQuality = sequelize.define("video-medium-quality", {
+  id: {
+    type: DataTypes.BIGINT,
+    primaryKey: true,
+    autoIncrement: true,
+    allowNull: false,
+  },
+  thisConverted: { type: DataTypes.BOOLEAN, defaultValue: false },
+});
+const VideoLowQuality = sequelize.define("video-low-quality", {
+  id: {
+    type: DataTypes.BIGINT,
+    primaryKey: true,
+    autoIncrement: true, 
+    allowNull: false,
+  },
+  thisConverted: { type: DataTypes.BOOLEAN, defaultValue: false },
 });
 const File = sequelize.define("file", {
   id: {
@@ -141,6 +158,10 @@ Course.hasMany(Video, { as: "video" });
 Video.belongsTo(Course, {as: 'course'});
 
 Video.hasMany(File, { as: "file" });
+ 
+Video.hasOne(VideoLowQuality, { as: "low" });
+
+Video.hasOne(VideoMediumQuality, { as: "medium" });
 // File.belongsTo(Video, {as: 'video'});
 
 City.hasMany(Collage, { as: "collage" });
@@ -160,5 +181,7 @@ module.exports = {
   City,
   Collage,
   Category,
-  File
+  File,
+  VideoLowQuality,
+  VideoMediumQuality
 }
